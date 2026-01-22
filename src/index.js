@@ -49,6 +49,11 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/sellers', sellerReportRoutes);
 
+const homeCategoryRoutes = require('./routers/HomeCategoryRoutes.js');
+const dealRoutes = require('./routers/DealRoutes.js');
+app.use('/home', homeCategoryRoutes);
+app.use('/admin/deals', dealRoutes);
+
 const port = process.env.PORT || 5000;
 app.listen(port, async() => {
   console.log(`Server is running on port ${port}`);
