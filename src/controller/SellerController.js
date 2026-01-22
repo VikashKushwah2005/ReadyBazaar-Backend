@@ -5,7 +5,7 @@ const UserRoles = require("../domain/UserRole");
 
 class SellerController{
     async getSellerProfile(req,res){
-        console.log(req.seller);
+       
         try{
             const seller = req.seller;
             
@@ -91,7 +91,7 @@ class SellerController{
                 token: token,
                 role:UserRoles.SELLER
             }
-            res.status(200).json(authResponse);
+            return res.status(200).json(authResponse);
         }catch(error){
             res.status(error instanceof Error ? 404: 500)
             .json({message:error.message});

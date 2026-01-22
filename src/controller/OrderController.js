@@ -1,5 +1,7 @@
+const PaymentOrder = require("../modal/PaymentOrder");
 const CartService = require("../service/CartService");
 const OrderService = require("../service/OrderService");
+const PaymentService = require("../service/PaymentService");
 
 class OrderController {
 
@@ -10,9 +12,24 @@ class OrderController {
             const user = req.user;
             const cart = await CartService.findUserCart(user);
             const orders = await OrderService.createOrder(user,shippingAddress,cart);
-            res.status(201).json({orders});
-        }catch(error){
-            res.status(500).json({error:error.message});
+            
+            const paymentOrder = await OrderService.createOrderPayment(user,orders);
+            
+            const response = {};
+            if(paymentMethod === 'RAZORPAY'){
+                const paymentLink = await PaymentService.createRazorpayPaymentLink(
+                    user,
+                    paymentOrder.amount,
+                    paymentOrder._id
+                );
+
+                response.payment_link_url = paymentLink.short_url;
+                paymentOrder.paymentLinkId = paymentLink.id;
+                await PaymentOrder.findByIdAndUpdate(paymentOrder._id,paymentOrder);    
+            }
+            return res.status(200).json(response);
+        }catch(error){  
+            return res.status(500).json({error:error.message});
         }
     }
     async getOrderById(req,res){

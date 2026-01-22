@@ -23,8 +23,7 @@ const sellerAuthMiddleware = async (req, res, next) => {
     req.seller = seller;
     next();
   } catch (err) {
-    console.error("SellerAuthMiddleware Error:", err);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 

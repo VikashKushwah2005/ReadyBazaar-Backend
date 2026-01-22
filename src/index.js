@@ -1,10 +1,17 @@
 require("dotenv").config();
 const express = require('express');
 const connectDB = require('./db/db.js');
-const bodyParser = require('body-parser');
+
 const app = express();
 
-app.use(bodyParser.json());
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    }
+  })
+);
+  
 
 app.get('/', (req, res) => {
   res.send({message: 'Welcome to Ready Bazaar Backend System!'});
@@ -35,6 +42,12 @@ const sellerOrderRoutes = require('./routers/SellerOrderRoutes.js');
 app.use('/api/orders/user', userOrderRoutes);
 app.use('/api/orders/seller', sellerOrderRoutes);
 
+const paymentRoutes = require('./routers/PaymentRoutes.js');
+const transactionRoutes = require('./routers/TransactionRoutes.js');
+const sellerReportRoutes = require('./routers/SellerReportRoutes.js');
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/sellers', sellerReportRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, async() => {

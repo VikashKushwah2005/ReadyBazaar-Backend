@@ -68,6 +68,7 @@ class PaymentService{
                 },
                 notify:{
                     email:true,
+                    sms:true
                 },
                 callback_url: `https://localhost:3000/payment-success/${orderId}`,
                 callback_method: 'get'
